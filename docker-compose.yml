@@ -60,5 +60,5 @@ services:
     command:
       - bash
       - -lc
-      - mkdir -p "$HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME" && sleep infinity
+      - mkdir -p /workspace/home /workspace/home/.cache /workspace/home/.config && sleep infinity
     user: "${HOST_UID}:${HOST_GID}"
