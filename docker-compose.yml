@@ -49,9 +49,16 @@ services:
       OPENAI_API_BASE: http://llm:${LLM_PORT}/v1
       MODEL_ALIAS: ${MODEL_ALIAS}
       LLM_PORT: ${LLM_PORT}
+      HOME: /workspace/home
+      XDG_CACHE_HOME: /workspace/home/.cache
+      XDG_CONFIG_HOME: /workspace/home/.config
     volumes:
       - ./:/workspace/control:ro
       - ${TARGET_REPO}:/workspace/target
+      - ./state/agent-home:/workspace/home
     working_dir: /workspace/target
-    command: ["sleep", "infinity"]
+    command:
+      - bash
+      - -lc
+      - mkdir -p "$HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME" && sleep infinity
     user: "${HOST_UID}:${HOST_GID}"

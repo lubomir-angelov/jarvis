@@ -29,7 +29,7 @@ help:
 
 init:
 	@test -f .env || cp .env.example .env
-	@mkdir -p state logs models
+	@mkdir -p state logs models  state/agent-home
 	@chmod +x bin/agentctl bin/run_task.sh bin/run_command.sh
 	@echo "Initialized. Edit .env if needed, then run 'make set-target TARGET_REPO=/abs/path'."
 
