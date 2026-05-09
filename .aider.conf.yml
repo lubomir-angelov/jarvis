@@ -6,8 +6,9 @@ yes-always: true
 show-diffs: true
 auto-lint: true
 auto-test: true
-map-tokens: 4096
-map-refresh: auto
+max-chat-history-tokens: 8000
+map-tokens: 512
+map-refresh: files
 cache-prompts: false
 stream: true
 commit-prompt: >-
