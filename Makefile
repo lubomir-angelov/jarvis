@@ -83,7 +83,7 @@ shell:
 	@$(COMPOSE) exec agent bash
 
 health:
-	@$(COMPOSE) exec agent python /workspace/control/bin/llm_healthcheck.py --base-url "http://llm:$${LLM_PORT}/v1"
+	@$(COMPOSE) exec agent bash -lc 'python /workspace/control/bin/llm_healthcheck.py --base-url "http://llm:$${LLM_PORT}/v1"'
 
 task:
 	@test -n "$(TASK)" || (echo "Usage: make task TASK=\"...\" [FILES=\"path1 path2\"]" && exit 1)
