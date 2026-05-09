@@ -1,0 +1,17 @@
+auto-commits: true
+dirty-commits: false
+gitignore: true
+subtree-only: true
+yes-always: true
+show-diffs: true
+auto-lint: true
+auto-test: true
+map-tokens: 4096
+map-refresh: auto
+cache-prompts: false
+stream: true
+commit-prompt: >-
+  Write a thorough, high-signal commit message.
+  Use Conventional Commits style.
+  Include a concise subject line and a short body covering:
+  what changed, why it changed, and the most important validation performed.
