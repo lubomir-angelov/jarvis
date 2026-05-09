@@ -42,3 +42,19 @@ make task \
   gkrp_data_portal/src/gkrp_data_portal/ui/pages/analytics_table.py \
   gkrp_data_portal/src/gkrp_data_portal/ui/pages/analytics_chart.py"
 ```
+
+
+
+```bash
+make task \
+  TASK="Inspect sqlalchemy.exc.ProgrammingError: (psycopg.errors.UndefinedColumn) column x.fragmentid does not exist LINE 7: ) x JOIN tblfragments f ON x.fragmentid = f.fragmentid HINT:  Perhaps you meant to reference the column f.fragmentid. Apply a fix and commit all changes." \
+  FILES=".agent/TASKS.md \
+  .agent/WORKLOG.md \
+  gkrp_data_portal/src/gkrp_data_portal/ui/repository/analytics_repo.py \
+  gkrp_data_portal/src/gkrp_data_portal/ui/pages/analytics_table.py \
+  gkrp_data_portal/src/gkrp_data_portal/ui/pages/analytics_chart.py"
+```
+
+```bash
+make task TASK="On the analytics_plot page, update the site, sector, and square filter fields so they support multi-value search by splitting the user input on these separators: comma (,), semicolon (;), and slash (/). The current behavior does exact string matching only, case-insensitive. Preserve case-insensitive matching, but when multiple values are provided, treat them as OR criteria within the same field. Trim whitespace around each split token, ignore empty tokens, and do not change unrelated filters or behavior. Update .agent/WORKLOG.md, run the narrowest useful validation, and commit." FILES="gkrp_data_portal/src/gkrp_data_portal/ui/repository/analytics_repo.py gkrp_data_portal/src/gkrp_data_portal/ui/pages/analytics_chart.py. Commit all files."
+```
