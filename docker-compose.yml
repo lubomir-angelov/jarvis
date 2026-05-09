@@ -42,6 +42,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.agent
+      args:
+        CONTEXT_CLI_REF: ${CONTEXT_CLI_REF}
     depends_on:
       - llm
     environment:
@@ -49,13 +51,16 @@ services:
       OPENAI_API_BASE: http://llm:${LLM_PORT}/v1
       MODEL_ALIAS: ${MODEL_ALIAS}
       LLM_PORT: ${LLM_PORT}
+      CONTEXT_ENABLE: ${CONTEXT_ENABLE}
+      CONTEXT_BUDGET: ${CONTEXT_BUDGET}
       HOME: /workspace/home
       XDG_CACHE_HOME: /workspace/home/.cache
       XDG_CONFIG_HOME: /workspace/home/.config
     volumes:
       - ./:/workspace/control:ro
-      - ${TARGET_REPO}:/workspace/target
+      - ./state:/workspace/state
       - ./state/agent-home:/workspace/home
+      - ${TARGET_REPO}:/workspace/target
     working_dir: /workspace/target
     command:
       - bash
