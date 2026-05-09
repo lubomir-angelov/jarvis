@@ -31,3 +31,14 @@ make task TASK="Implement task Y"
 - The task runner creates `.agent/WORKLOG.md` inside the target repo and asks Aider to keep it updated.
 - Use `FILES="path1 path2"` to hint which files are likely relevant.
 - The agent uses Aider auto-commits, auto-lint, and auto-test if the target repo exposes working lint/test commands.
+
+## Sample task run
+```bash
+make task \
+  TASK="Inspect how fragment totals are calculated and change fragment counting to use f_count instead of row count. Update .agent/WORKLOG.md, run narrow validation, and commit." \
+  FILES=".agent/TASKS.md \
+  .agent/WORKLOG.md \
+  gkrp_data_portal/src/gkrp_data_portal/ui/repository/analytics_repo.py \
+  gkrp_data_portal/src/gkrp_data_portal/ui/pages/analytics_table.py \
+  gkrp_data_portal/src/gkrp_data_portal/ui/pages/analytics_chart.py"
+```

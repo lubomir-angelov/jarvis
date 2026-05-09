@@ -91,6 +91,9 @@ exec aider \
   --model "openai/${MODEL_ALIAS}" \
   --openai-api-base "http://llm:${LLM_PORT}/v1" \
   --openai-api-key "${OPENAI_API_KEY}" \
+  --no-restore-chat-history \
+  --chat-history-file /tmp/.aider.chat.history.md \
+  --input-history-file /tmp/.aider.input.history \
   --read /workspace/control/prompts/OPERATING_CONVENTIONS.md \
   --read .agent/WORKLOG.md \
   --message-file /tmp/aider_task_prompt.txt \
