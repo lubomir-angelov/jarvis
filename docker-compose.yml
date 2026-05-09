@@ -54,3 +54,4 @@ services:
       - ${TARGET_REPO}:/workspace/target
     working_dir: /workspace/target
     command: ["sleep", "infinity"]
+    user: "${HOST_UID}:${HOST_GID}"

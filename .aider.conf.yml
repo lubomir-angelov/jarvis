@@ -15,3 +15,4 @@ commit-prompt: >-
   Use Conventional Commits style.
   Include a concise subject line and a short body covering:
   what changed, why it changed, and the most important validation performed.
+  Use plain git commit text with no fences.
