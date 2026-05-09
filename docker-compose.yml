@@ -5,7 +5,7 @@ services:
     environment:
       LLAMA_CACHE: /models
       # LD_LIBRARY_PATH=/app:/usr/local/lib:/usr/lib:${LD_LIBRARY_PATH}
-      LD_LIBRARY_PATH: /app:/app/lib:/usr/local/lib:/usr/lib
+      LD_LIBRARY_PATH: /app:/usr/local/lib:/usr/lib
     volumes:
       - ./models:/models
     ports:
@@ -31,6 +31,12 @@ services:
       - "${LLM_MIN_P}"
       - "--reasoning"
       - "off"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:${LLM_PORT}/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 60
+      start_period: 10m
 
   agent:
     build:
