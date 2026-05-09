@@ -4,6 +4,8 @@ services:
     gpus: all
     environment:
       LLAMA_CACHE: /models
+      # LD_LIBRARY_PATH=/app:/usr/local/lib:/usr/lib:${LD_LIBRARY_PATH}
+      LD_LIBRARY_PATH: /app:/app/lib:/usr/local/lib:/usr/lib
     volumes:
       - ./models:/models
     ports:
