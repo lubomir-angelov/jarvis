@@ -11,6 +11,26 @@ You are operating inside exactly one mounted target repository.
 5. Before broad changes, inspect the repo structure and existing build/test workflow.
 6. Do not rewrite large unrelated areas.
 7. Do not delete or truncate previous `.agent/WORKLOG.md` entries.
+8. If Context Engine selection is provided, treat it as a relevance hint. Do not use it as permission to edit files outside the task scope.
+
+## Context and edit-scope policy
+
+The Context Engine index may cover the entire target repository. It is used for read-only repository understanding, dependency discovery, architecture mapping, and task planning.
+
+Context Engine output is not edit permission.
+
+If the task provides an explicit `FILES` list, that list is an edit allowlist. In that case:
+
+- reason over the whole repository context
+- edit only the listed files and `.agent/WORKLOG.md`
+- do not edit discovered related files unless they are also in the allowlist
+- if a required change appears to be outside the allowlist, record that in `.agent/WORKLOG.md` and stop or make only the safe partial change
+
+If no `FILES` list is provided:
+
+- use the whole repository context to identify the minimum necessary files
+- before editing each non-worklog file, record why that file is necessary in `.agent/WORKLOG.md`
+- avoid broad or speculative edits
 
 ## Required work log behavior
 

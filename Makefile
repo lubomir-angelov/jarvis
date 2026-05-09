@@ -87,12 +87,22 @@ health:
 
 task:
 	@test -n "$(TASK)" || (echo "Usage: make task TASK=\"...\" [FILES=\"path1 path2\"]" && exit 1)
-	@$(COMPOSE) exec -e TASK="$(TASK)" -e FILES="$(FILES)" agent /workspace/control/bin/run_task.sh
+	@$(COMPOSE) exec \
+		-e TASK="$(TASK)" \
+		-e FILES="$(FILES)" \
+		-e CONTEXT_ENABLE="$(CONTEXT_ENABLE)" \
+		-e CONTEXT_BUDGET="$(CONTEXT_BUDGET)" \
+		agent /workspace/control/bin/run_task.sh
 
 task-file:
 	@test -n "$(FILE)" || (echo "Usage: make task-file FILE=path/to/task.md [FILES=\"path1 path2\"]" && exit 1)
 	@test -f "$(FILE)" || (echo "Task file not found: $(FILE)" && exit 1)
-	@$(COMPOSE) exec -e TASK_FILE="/workspace/control/$(FILE)" -e FILES="$(FILES)" agent /workspace/control/bin/run_task.sh
+	@$(COMPOSE) exec \
+		-e TASK_FILE="/workspace/control/$(FILE)" \
+		-e FILES="$(FILES)" \
+		-e CONTEXT_ENABLE="$(CONTEXT_ENABLE)" \
+		-e CONTEXT_BUDGET="$(CONTEXT_BUDGET)" \
+		agent /workspace/control/bin/run_task.sh
 
 exec:
 	@test -n "$(CMD)" || (echo "Usage: make exec CMD=\"...\"" && exit 1)
