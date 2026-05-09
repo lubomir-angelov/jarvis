@@ -27,8 +27,8 @@ services:
       - "${LLM_TOP_K}"
       - "--min-p"
       - "${LLM_MIN_P}"
-      - "--chat-template-kwargs"
-      - '{"enable_thinking":false}'
+      - "--reasoning"
+      - "off"
 
   agent:
     build:
