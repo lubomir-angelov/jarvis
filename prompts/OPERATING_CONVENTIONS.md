@@ -5,7 +5,7 @@ You are operating inside exactly one mounted target repository.
 ## Guardrails
 
 1. Work only inside the mounted target repository.
-2. The repository must stay on the `main` branch.
+2. The repository must stay on the `feature/agent_work` branch.
 3. Make small, reviewable commits.
 4. Prefer existing project patterns over introducing new frameworks or conventions.
 5. Before broad changes, inspect the repo structure and existing build/test workflow.

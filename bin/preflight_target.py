@@ -28,7 +28,7 @@ def main() -> int:
         raise SystemExit("Mounted target is not a git repo")
 
     branch = git("branch", "--show-current")
-    if branch != "main":
+    if branch != "feature/agent_work":
         raise SystemExit(f"Refusing to run: target repo is on branch '{branch}', not 'main'")
 
     status = git("status", "--short")
