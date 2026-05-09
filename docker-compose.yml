@@ -1,0 +1,48 @@
+services:
+  llm:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    gpus: all
+    environment:
+      LLAMA_CACHE: /models
+    volumes:
+      - ./models:/models
+    ports:
+      - "${LLM_PORT}:${LLM_PORT}"
+    command:
+      - "-hf"
+      - "${MODEL_HF_REPO}:${MODEL_HF_QUANT}"
+      - "--alias"
+      - "${MODEL_ALIAS}"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "${LLM_PORT}"
+      - "--ctx-size"
+      - "${LLM_CTX_SIZE}"
+      - "--temp"
+      - "${LLM_TEMP}"
+      - "--top-p"
+      - "${LLM_TOP_P}"
+      - "--top-k"
+      - "${LLM_TOP_K}"
+      - "--min-p"
+      - "${LLM_MIN_P}"
+      - "--chat-template-kwargs"
+      - '{"enable_thinking":false}'
+
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    depends_on:
+      - llm
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_API_BASE: http://llm:${LLM_PORT}/v1
+      MODEL_ALIAS: ${MODEL_ALIAS}
+      LLM_PORT: ${LLM_PORT}
+    volumes:
+      - ./:/workspace/control:ro
+      - ${TARGET_REPO}:/workspace/target
+    working_dir: /workspace/target
+    command: ["sleep", "infinity"]
