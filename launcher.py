@@ -42,6 +42,9 @@ def main() -> None:
 
     project = Path(args.project).expanduser().resolve()
 
+    host_uid = os.getuid()
+    host_gid = os.getgid()
+
     if not project.exists():
         raise SystemExit(f"Project does not exist: {project}")
 
@@ -104,18 +107,42 @@ Operating rules:
         volumes=[
             f"{project}:/workspace",
         ],
+        forward_env=[
+        "DEBUG",
+        "SESSION_API_KEY",
+        "OH_SESSION_API_KEYS_0",
+        "OH_CONVERSATIONS_PATH",
+        "OH_BASH_EVENTS_DIR",
+        "OH_WORKSPACE_PATH",
+        ],
     ) as workspace:
 
         conversation = Conversation(
             agent=agent,
             workspace=workspace,
-            visualize=True,
+            visualizer=True,
         )
 
         try:
             conversation.send_message(task)
             conversation.run()
         finally:
+            print(
+                f"Restoring workspace ownership to "
+                f"{host_uid}:{host_gid}..."
+            )
+
+            result = workspace.execute_command(
+                f"chown -R {host_uid}:{host_gid} /workspace",
+                timeout=120,
+            )
+
+            if result.exit_code != 0:
+                print(
+                    "WARNING: failed to restore workspace ownership:",
+                    result.stderr,
+                )
+                
             conversation.close()
 
 

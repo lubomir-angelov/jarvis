@@ -23,6 +23,9 @@ PY := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 
 OPENHANDS_SERVER_IMAGE ?= ghcr.io/openhands/agent-server:latest-python
+OPENHANDS_CONVERSATIONS_PATH ?= /tmp/openhands/conversations
+OPENHANDS_BASH_EVENTS_DIR ?= /tmp/openhands/bash_events
+OPENHANDS_WORKSPACE_PATH ?= /workspace
 
 # ======================================================================
 # Docker
@@ -530,9 +533,12 @@ agent: llm-wait
 	echo; \
 	LLM_BASE_URL="http://$(LLM_CONTAINER):$(LLM_CONTAINER_PORT)/v1" \
 	LLM_MODEL="openai/$$MODEL" \
-	LLM_API_KEY="local" \
+	LLM_API_KEY="$(LLM_API_KEY)" \
 	AGENT_DOCKER_NETWORK="$(NETWORK)" \
 	OPENHANDS_SERVER_IMAGE="$(OPENHANDS_SERVER_IMAGE)" \
+	OH_CONVERSATIONS_PATH="$(OPENHANDS_CONVERSATIONS_PATH)" \
+	OH_BASH_EVENTS_DIR="$(OPENHANDS_BASH_EVENTS_DIR)" \
+	OH_WORKSPACE_PATH="$(OPENHANDS_WORKSPACE_PATH)" \
 	$(PY) "$(REPO_ROOT)/launcher.py" \
 		--project "$(abspath $(PROJECT))" \
 		--task "$(TASK)"
