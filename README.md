@@ -153,7 +153,7 @@ The agent sees either one simply as:
 /workspace
 ```
 
-Important! : the agent container does not need GitHub credentials just to work on a cloned repo. Git authentication remains on the host. So the clean workflow is:
+**Important** : the agent container does not need GitHub credentials just to work on a cloned repo. Git authentication remains on the host. So the clean workflow is:
 
 ```bash
 Host
