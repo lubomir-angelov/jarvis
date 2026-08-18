@@ -6,7 +6,8 @@ SHELL := /usr/bin/env bash
 # Jarvis
 # ======================================================================
 
-REPO_ROOT := $(HOME)/repos/jarvis
+REPO_NAME := jarvis
+REPO_ROOT := $(HOME)/repos/$(REPO_NAME)
 
 MODELS_DIR := $(REPO_ROOT)/models/hotswap
 PROJECTS_DIR := $(REPO_ROOT)/projects
@@ -15,9 +16,9 @@ PROJECTS_DIR := $(REPO_ROOT)/projects
 # Python / OpenHands
 # ======================================================================
 
-PYTHON ?= python3.12
+PYTHON ?= python3.13
 
-VENV := $(REPO_ROOT)/.venv
+VENV := ~/venvs/$(REPO_NAME)
 PY := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 
@@ -27,13 +28,13 @@ OPENHANDS_SERVER_IMAGE ?= ghcr.io/openhands/agent-server:latest-python
 # Docker
 # ======================================================================
 
-NETWORK ?= jarvis-net
+NETWORK ?= $(REPO_NAME)-net
 
 # ======================================================================
 # llama.cpp
 # ======================================================================
 
-LLM_CONTAINER ?= jarvis-llm
+LLM_CONTAINER ?= $(REPO_NAME)-llm
 
 # Official upstream llama.cpp CUDA image.
 #
@@ -46,6 +47,7 @@ LLM_IMAGE ?= ghcr.io/ggml-org/llama.cpp:server-cuda
 
 LLM_HOST_PORT ?= 8000
 LLM_CONTAINER_PORT ?= 8080
+LLM_API_KEY ?= local-llm
 
 # ======================================================================
 # Model runtime
@@ -313,6 +315,7 @@ llm-up: network local-models
 		"$(LLM_IMAGE)" \
 		--host 0.0.0.0 \
 		--port "$(LLM_CONTAINER_PORT)" \
+		--api-key "$(LLM_API_KEY)" \
 		--models-dir /models \
 		--models-max "$(MODELS_MAX)" \
 		--models-autoload \
@@ -445,16 +448,8 @@ smoke: llm-wait
 	curl -fsS \
 		"http://127.0.0.1:$(LLM_HOST_PORT)/v1/chat/completions" \
 		-H "Content-Type: application/json" \
-		-d "$$($(PY) -c '\
-import json,sys; \
-model=sys.argv[1]; \
-print(json.dumps({ \
-    "model": model, \
-    "messages": [ \
-        {"role":"user","content":"Reply with exactly LOCAL_LLM_OK"} \
-    ], \
-    "temperature": 0 \
-}))' "$$MODEL")" \
+		-H "Authorization: Bearer $(LLM_API_KEY)" \
+		-d "$$($(PY) -c 'import json,sys; print(json.dumps({"model":sys.argv[1],"messages":[{"role":"user","content":"Reply with exactly LOCAL_LLM_OK"}],"temperature":0}))' "$$MODEL")" \
 		| $(PY) -m json.tool
 
 # ======================================================================
@@ -475,32 +470,8 @@ tool-smoke: llm-wait
 	curl -fsS \
 		"http://127.0.0.1:$(LLM_HOST_PORT)/v1/chat/completions" \
 		-H "Content-Type: application/json" \
-		-d "$$($(PY) -c '\
-import json,sys; \
-model=sys.argv[1]; \
-print(json.dumps({ \
-  "model": model, \
-  "messages": [{ \
-    "role":"user", \
-    "content":"You MUST call the calculator tool to calculate 17 * 23." \
-  }], \
-  "tools":[{ \
-    "type":"function", \
-    "function":{ \
-      "name":"calculator", \
-      "description":"Evaluate a mathematical expression.", \
-      "parameters":{ \
-        "type":"object", \
-        "properties":{ \
-          "expression":{"type":"string"} \
-        }, \
-        "required":["expression"] \
-      } \
-    } \
-  }], \
-  "tool_choice":"auto", \
-  "temperature":0 \
-}))' "$$MODEL")" \
+		-H "Authorization: Bearer $(LLM_API_KEY)" \
+		-d "$$($(PY) -c 'import json,sys; print(json.dumps({"model":sys.argv[1],"messages":[{"role":"user","content":"You MUST call the calculator tool to calculate 17 * 23."}],"tools":[{"type":"function","function":{"name":"calculator","description":"Evaluate a mathematical expression.","parameters":{"type":"object","properties":{"expression":{"type":"string"}},"required":["expression"]}}}],"tool_choice":"auto","temperature":0}))' "$$MODEL")" \
 		| $(PY) -m json.tool
 
 # ======================================================================
