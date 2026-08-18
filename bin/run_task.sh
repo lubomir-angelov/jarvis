@@ -60,8 +60,10 @@ CONTEXT_BLOCK=""
 if [[ "${CONTEXT_ENABLE:-1}" == "1" ]]; then
   CONTEXT_SRC_DIR="/workspace/state/context-src/repo"
   CONTEXT_CACHE_DIR="/workspace/state/context-cache/repo"
-
+  
   mkdir -p /workspace/state/context-src /workspace/state/context-cache
+  rm -rf "${CONTEXT_SRC_DIR}" "${CONTEXT_CACHE_DIR}"
+  mkdir -p "${CONTEXT_SRC_DIR}"
 
   python /workspace/control/bin/context_prepare_sources.py \
     --repo-root /workspace/target \

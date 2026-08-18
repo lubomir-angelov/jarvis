@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-ARG CONTEXT_CLI_REF=v0.1.0
+ARG CONTEXT_CLI_VERSION=0.1.0
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -22,10 +22,11 @@ RUN apt-get update \
         tini \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --branch "${CONTEXT_CLI_REF}" --depth 1 https://github.com/contextenginehq/context-cli.git /tmp/context-cli \
-    && cargo build --manifest-path /tmp/context-cli/Cargo.toml --release \
-    && install -m 0755 /tmp/context-cli/target/release/context /usr/local/bin/context \
-    && rm -rf /tmp/context-cli
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+RUN cargo install context-cli --version "${CONTEXT_CLI_VERSION}" \
+    && install -m 0755 /root/.cargo/bin/context /usr/local/bin/context \
+    && /usr/local/bin/context --help >/dev/null
 
 RUN python -m pip install --upgrade pip \
     && python -m pip install aider-chat

@@ -43,7 +43,7 @@ services:
       context: .
       dockerfile: Dockerfile.agent
       args:
-        CONTEXT_CLI_REF: ${CONTEXT_CLI_REF}
+        CONTEXT_CLI_VERSION: ${CONTEXT_CLI_VERSION}
     depends_on:
       - llm
     environment:
