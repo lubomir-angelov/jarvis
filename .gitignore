@@ -224,3 +224,6 @@ __marimo__/
 logs/
 state/
 models/
+
+# Projects spawned/managed by this controller are their own git repos.
+projects/
